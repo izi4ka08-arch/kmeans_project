@@ -23,3 +23,10 @@ add_executable(clustering_demo
 target_include_directories(clustering_demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(clustering_demo PRIVATE kmeans)
 
+add_executable(elbow_demo
+    demo/elbow_demo.c
+)
+
+target_include_directories(elbow_demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(elbow_demo PRIVATE kmeans)
+
