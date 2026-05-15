@@ -1,7 +1,13 @@
 ```
-# Compiled and build artifacts
 *.o
 *.obj
 *.out
+dist/
 build/
+*.log
+*.tmp
+*.swp
+.env
+.env.local
+*.env.*
 ```
