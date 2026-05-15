@@ -1,15 +1,7 @@
 ```
-# Build artifacts
-build/
-*.d
+# Compiled and build artifacts
 *.o
 *.obj
 *.out
-
-# Executables
-elbow_demo
-kmeans_demo
-
-# Data files (if generated)
-data.csv
+build/
 ```
