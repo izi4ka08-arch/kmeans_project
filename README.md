@@ -53,14 +53,35 @@
 
 1) Сгенерировать данные:
 
+### Генерация сферических кластеров (blobs)
+
 ```bash
-python tools/generate_blobs.py --out data.csv --samples 600 --centers 3
+python tools/generate_blobs.py --out data.csv --type blobs --samples 600 --centers 3
 ```
+
+### Генерация данных «полумесяцы» (moons)
+
+```bash
+python tools/generate_blobs.py --out data.csv --type moons --samples 600
+```
+
+### Параметры генератора
+
+- `--type` — тип данных: `blobs` (сферические кластеры) или `moons` (полумесяцы)
+- `--samples` — количество образцов (по умолчанию 600)
+- `--centers` — количество центров, только для `blobs` (по умолчанию 3)
+- `--std` — стандартное отклонение шума, только для `blobs` (по умолчанию 0.9)
+- `--noise` — уровень шума, только для `moons` (по умолчанию 0.1)
+- `--seed` — seed для воспроизводимости
 
 Чтобы получить повторяемый датасет (одинаковый на разных запусках), укажите `--seed`, например:
 
 ```bash
-python tools/generate_blobs.py --out data.csv --samples 600 --centers 3 --seed 42
+# Для blobs
+python tools/generate_blobs.py --out data.csv --type blobs --samples 600 --centers 3 --seed 42
+
+# Для moons
+python tools/generate_blobs.py --out data.csv --type moons --samples 600 --seed 42
 ```
 
 2) Собрать (Make):
