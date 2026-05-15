@@ -7,6 +7,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 add_library(kmeans STATIC
     src/kmeans.c
     src/csv.c
+    src/dbscan.c
 )
 
 if(UNIX AND NOT APPLE)

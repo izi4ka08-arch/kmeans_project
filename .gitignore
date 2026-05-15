@@ -1,7 +1,9 @@
 ```
 # Build artifacts
+CMakeFiles/
+cmake-build-*/
+Makefile
 *.o
-*.obj
 *.a
 *.so
 *.dylib
@@ -9,81 +11,38 @@
 *.exe
 *.out
 
-# CMake build directory
-build/
-
 # Dependencies
+.externalNativeBuild/
+.gradle/
+build/
+dist/
+node_modules/
 venv/
 .venv/
 __pycache__/
 *.egg-info/
 
-# Logs and temp files
-*.log
-*.tmp
+# IDE files
+.idea/
+.vscode/
 *.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
 # Coverage
+.coverage
 coverage/
 htmlcov/
-.coverage
 
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-*.egg
-*.egg-info/
-dist/
-build/
-*.dist-info/
-
-# Compiled
-*.class
-*.o
-*.a
-*.obj
-*.out
-
-# Archives
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# OS files
+.DS_Store
+Thumbs.db
 ```
