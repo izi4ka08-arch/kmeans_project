@@ -1,15 +1,15 @@
+```
+# Build artifacts
 build/
-*.exe
+*.d
+*.o
 *.obj
-*.pdb
-*.ilk
-*.lib
-*.exp
-.vs/
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-*.sln
-*.vcxproj*
-Release/
-Debug/
+*.out
+
+# Executables
+elbow_demo
+kmeans_demo
+
+# Data files (if generated)
+data.csv
+```
