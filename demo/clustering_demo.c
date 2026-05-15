@@ -183,16 +183,7 @@ int* run_dbscan(Dataset *dataset, ClusteringConfig *config) {
  * @param num_points Количество точек.
  */
 void save_results(const char *input_path, csv_dataset_t *ds, int *labels, int num_points) {
-    char output_path[512];
-    
-    // Формируем имя выходного файла
-    const char *dot = strrchr(input_path, '.');
-    if (dot) {
-        snprintf(output_path, sizeof(output_path), "%.*s_clusters.csv", 
-                 (int)(dot - input_path), input_path);
-    } else {
-        snprintf(output_path, sizeof(output_path), "%s_clusters.csv", input_path);
-    }
+    const char *output_path = "pred.csv";
     
     if (csv_write_predictions(output_path, ds, labels) == 0) {
         printf("\nРезультаты сохранены в файл: %s\n", output_path);
