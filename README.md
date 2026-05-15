@@ -121,8 +121,12 @@ cmake --build build
 
 ### Классическое K-means демо
 
-Linux/macOS:
+**Windows (PowerShell):**
+```powershell
+.\build\Debug\kmeans_demo.exe --in data.csv --k 3 --out pred.csv --seed 42
+```
 
+**Linux/macOS:**
 ```bash
 ./build/kmeans_demo --in data.csv --k 3 --out pred.csv --seed 42
 ```
