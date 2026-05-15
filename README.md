@@ -6,15 +6,23 @@
 
 ### Сравнение K-means и DBSCAN на разных типах данных
 
-![Сравнение K-means и DBSCAN](assets/dbscan_visualization.png)
+![Сравнение K-means и DBSCAN](assets/kmeans_dbscan_comparison.png)
 
 *На рисунке показано сравнение алгоритмов K-means и DBSCAN на двух типах данных:*
 - *Moons (полумесяцы) — DBSCAN успешно разделяет нелинейные структуры, в то время как K-means делит их линейно*
-- *Blobs (сферические кластеры) — оба алгоритма работают хорошо, но DBSCAN может выделять шум*
+- *Blobs (сферические кластеры) — оба алгоритма работают хорошо на сферических кластерах, но DBSCAN может выделять шум*
 
 ### Пример кластеризации
 
 ![Визуализация кластеров](assets/clusters_example.png)
+
+### Визуализация DBSCAN
+
+![DBSCAN визуализация](assets/dbscan_visualization.png)
+
+*На рисунке показано применение алгоритма DBSCAN на двух типах данных:*
+- *Moons (полумесяцы) — DBSCAN успешно разделяет нелинейные структуры*
+- *Blobs (сферические кластеры) — DBSCAN корректно выделяет кластеры на основе плотности*
 
 ## Что это делает
 
@@ -45,14 +53,35 @@
 
 1) Сгенерировать данные:
 
+### Генерация сферических кластеров (blobs)
+
 ```bash
-python tools/generate_blobs.py --out data.csv --samples 600 --centers 3
+python tools/generate_blobs.py --out data.csv --type blobs --samples 600 --centers 3
 ```
+
+### Генерация данных «полумесяцы» (moons)
+
+```bash
+python tools/generate_blobs.py --out data.csv --type moons --samples 600
+```
+
+### Параметры генератора
+
+- `--type` — тип данных: `blobs` (сферические кластеры) или `moons` (полумесяцы)
+- `--samples` — количество образцов (по умолчанию 600)
+- `--centers` — количество центров, только для `blobs` (по умолчанию 3)
+- `--std` — стандартное отклонение шума, только для `blobs` (по умолчанию 0.9)
+- `--noise` — уровень шума, только для `moons` (по умолчанию 0.1)
+- `--seed` — seed для воспроизводимости
 
 Чтобы получить повторяемый датасет (одинаковый на разных запусках), укажите `--seed`, например:
 
 ```bash
-python tools/generate_blobs.py --out data.csv --samples 600 --centers 3 --seed 42
+# Для blobs
+python tools/generate_blobs.py --out data.csv --type blobs --samples 600 --centers 3 --seed 42
+
+# Для moons
+python tools/generate_blobs.py --out data.csv --type moons --samples 600 --seed 42
 ```
 
 2) Собрать (Make):
