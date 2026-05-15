@@ -1,18 +1,45 @@
-# k-means (K-средних) на C — с нуля
+# k-means (K-средних) и DBSCAN на C — с нуля
 
-Реализация **k-means** (алгоритм Ллойда) **на чистом C**: библиотечная функция для кластеризации, CLI-демо для работы с CSV, генерация синтетических данных и визуализация результатов.
+Реализация **k-means** (алгоритм Ллойда) и **DBSCAN** (Density-Based Spatial Clustering) **на чистом C**: библиотечная функция для кластеризации, CLI-демо для работы с CSV, генерация синтетических данных и визуализация результатов.
+
+## Визуализация результатов
+
+### Сравнение K-means и DBSCAN на разных типах данных
+
+![Сравнение K-means и DBSCAN](assets/dbscan_visualization.png)
+
+*На рисунке показано сравнение алгоритмов K-means и DBSCAN на двух типах данных:*
+- *Moons (полумесяцы) — DBSCAN успешно разделяет нелинейные структуры, в то время как K-means делит их линейно*
+- *Blobs (сферические кластеры) — оба алгоритма работают хорошо, но DBSCAN может выделять шум*
+
+### Пример кластеризации
 
 ![Визуализация кластеров](assets/clusters_example.png)
 
 ## Что это делает
 
+### K-means
 Алгоритм k-means разбивает набор `d`-мерных точек на `k` кластеров так, чтобы каждая точка относилась к кластеру с ближайшим центроидом (средним).
+
+### DBSCAN
+Алгоритм DBSCAN (Density-Based Spatial Clustering of Applications with Noise) группирует точки на основе плотности распределения:
+- **Ядерные точки** — имеют достаточное количество соседей в радиусе `eps`
+- **Граничные точки** — находятся в окрестности ядерных точек
+- **Шум** — изолированные точки, не принадлежащие ни одному кластеру
 
 ## Когда это использовать
 
-- Когда у вас **числовые данные** (векторы признаков).
-- Когда **нет меток** классов и нужно разбить данные на группы.
-- Когда вы **знаете `k`** (количество кластеров) или хотите автоматически подобрать его с помощью **метода локтя**.
+### K-means
+- Когда у вас **числовые данные** (векторы признаков)
+- Когда **нет меток** классов и нужно разбить данные на группы
+- Когда вы **знаете `k`** (количество кластеров) или хотите автоматически подобрать его с помощью **метода локтя**
+- Для сферических кластеров примерно одинакового размера
+
+### DBSCAN
+- Когда форма кластеров **произвольная** (не обязательно сферическая)
+- Когда есть **выбросы/шум** в данных
+- Когда **неизвестно количество кластеров** заранее
+- Для данных с разной плотностью распределения
 
 ## Быстрый старт
 
@@ -28,14 +55,36 @@ python tools/generate_blobs.py --out data.csv --samples 600 --centers 3
 python tools/generate_blobs.py --out data.csv --samples 600 --centers 3 --seed 42
 ```
 
-2) Собрать (CMake):
+2) Собрать (Make):
 
 ```bash
-cmake -S . -B build
-cmake --build build --config Release
+make all
+```
+
+Или собрать отдельные демо-программы:
+
+```bash
+make kmeans_demo      # только K-means демо
+make elbow_demo       # метод локтя
+make clustering_demo  # универсальное демо с выбором алгоритма
 ```
 
 3) Запустить демо:
+
+### Универсальное демо с выбором алгоритма
+
+```bash
+# K-means с 3 кластерами
+./build/clustering_demo data.csv 3 kmeans
+
+# K-means с настройками (k=3, max_iter=200, инициализация random)
+./build/clustering_demo data.csv 3 200 0 kmeans
+
+# DBSCAN с параметрами eps=0.5, min_pts=4
+./build/clustering_demo data.csv 0.5 4 dbscan
+```
+
+### Классическое K-means демо
 
 Windows (PowerShell), если собирали с `--config Release`:
 
@@ -43,7 +92,7 @@ Windows (PowerShell), если собирали с `--config Release`:
 .\build\Release\kmeans_demo.exe --in data.csv --k 3 --out pred.csv --seed 42
 ```
 
-Linux/macOS (обычно без `--config Release`):
+Linux/macOS:
 
 ```bash
 ./build/kmeans_demo --in data.csv --k 3 --out pred.csv --seed 42
@@ -107,6 +156,8 @@ int rc = kmeans_fit(X, n_samples, n_features, &params, labels_out, centroids_out
 
 ## Параметры и опции
 
+### K-means
+
 Параметры алгоритма задаются через `kmeans_params_t` (см. `src/kmeans.h`):
 
 - `k` — количество кластеров
@@ -115,12 +166,21 @@ int rc = kmeans_fit(X, n_samples, n_features, &params, labels_out, centroids_out
 - `seed` — seed для генератора случайных чисел
 - `init_method` — инициализация центроидов (случайная или k-means++)
 
+### DBSCAN
+
+Параметры алгоритма задаются в функции `dbscan_cluster` (см. `src/dbscan.h`):
+
+- `eps` — радиус окрестности для поиска соседей
+- `min_pts` — минимальное количество точек для образования плотной области
+
 ## Структура проекта
 
 - `src/kmeans.h`, `src/kmeans.c` — реализация k-means и метод локтя (`kmeans_elbow`)
+- `src/dbscan.h`, `src/dbscan.c` — реализация алгоритма DBSCAN
 - `src/csv.h`, `src/csv.c` — чтение `data.csv` и запись `pred.csv`
 - `demo/kmeans_demo.c` — CLI-демо (читает CSV → кластеризует → пишет CSV)
 - `demo/elbow_demo.c` — демо для подбора оптимального `k` методом локтя
+- `demo/clustering_demo.c` — универсальное демо с выбором алгоритма (K-means или DBSCAN)
 - `tools/generate_blobs.py` — генерация `data.csv`
 - `tools/plot_results.py` — построение `clusters.png` и расчёт метрик
 

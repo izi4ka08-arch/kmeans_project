@@ -1,15 +1,77 @@
-```
-# Build artifacts
+# Image files
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.gif
+*.webm
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+dist/
 build/
-*.d
+target/
+.gradle/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Compiled files
+*.pyc
+*.class
 *.o
+*.exe
+*.dll
+*.so
+*.a
 *.obj
 *.out
 
-# Executables
-elbow_demo
-kmeans_demo
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
 
-# Data files (if generated)
-data.csv
-```
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
