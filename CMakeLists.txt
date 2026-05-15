@@ -15,10 +15,10 @@ endif()
 
 target_include_directories(kmeans PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-add_executable(kmeans_demo
+add_executable(clustering_demo
     demo/kmeans_demo.c
 )
 
-target_include_directories(kmeans_demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(kmeans_demo PRIVATE kmeans)
+target_include_directories(clustering_demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(clustering_demo PRIVATE kmeans)
 

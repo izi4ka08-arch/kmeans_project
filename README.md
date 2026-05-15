@@ -95,6 +95,19 @@ cmake --build build
 
 ### Универсальное демо с выбором алгоритма
 
+**Windows (PowerShell):**
+```powershell
+# K-means с 3 кластерами
+.\build\Debug\clustering_demo.exe data.csv 3 kmeans
+
+# K-means с настройками (k=3, max_iter=200, инициализация random)
+.\build\Debug\clustering_demo.exe data.csv 3 200 0 kmeans
+
+# DBSCAN с параметрами eps=0.5, min_pts=4
+.\build\Debug\clustering_demo.exe data.csv 0.5 4 dbscan
+```
+
+**Linux/macOS:**
 ```bash
 # K-means с 3 кластерами
 ./build/clustering_demo data.csv 3 kmeans
@@ -126,6 +139,13 @@ python tools/plot_results.py --data data.csv --pred pred.csv
 
 Запуск демо-программы метода локтя:
 
+**Windows (PowerShell):**
+```powershell
+# Запуск (автоматически подберет k в диапазоне [2, 10])
+.\build\Debug\elbow_demo.exe --in data.csv --max-k 10
+```
+
+**Linux/macOS:**
 ```bash
 # Запуск (автоматически подберет k в диапазоне [2, 10])
 ./build/elbow_demo --in data.csv --max-k 10
