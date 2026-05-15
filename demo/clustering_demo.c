@@ -186,7 +186,7 @@ void save_results(const char *input_path, csv_dataset_t *ds, int *labels, int nu
     const char *output_path = "pred.csv";
     
     if (csv_write_predictions(output_path, ds, labels) == 0) {
-        printf("\nРезультаты сохранены в файл: %s\n", output_path);
+        printf("successfull\n");
     } else {
         fprintf(stderr, "Ошибка записи результатов в файл: %s\n", output_path);
     }

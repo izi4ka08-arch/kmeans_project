@@ -73,8 +73,13 @@ def main() -> None:
         ax[0].scatter(X[:, 0], X[:, 1], s=18)
         ax[0].set_title("Data")
 
-    ax[1].scatter(X[:, 0], X[:, 1], c=pred_labels, s=18, cmap="tab10")
-    title = f"K-means pred\ninertia={inert:.4g}"
+    ax[1].scatter(X[:, 0], X[:, 1], c=pred_labels, s=18, cmap="tab10", vmin=-1, vmax=pred_labels.max())
+    
+    # Определяем тип алгоритма по наличию шума (-1 метки)
+    has_noise = (pred_labels == -1).any()
+    algorithm_name = "DBSCAN" if has_noise else "K-means"
+    
+    title = f"{algorithm_name} pred\ninertia={inert:.4g}"
     if sil is not None:
         title += f", silhouette={sil:.4g}"
     ax[1].set_title(title)
