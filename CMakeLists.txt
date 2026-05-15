@@ -16,7 +16,7 @@ endif()
 target_include_directories(kmeans PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_executable(clustering_demo
-    demo/kmeans_demo.c
+    demo/clustering_demo.c
 )
 
 target_include_directories(clustering_demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
