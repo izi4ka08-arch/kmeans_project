@@ -9,7 +9,9 @@ add_library(kmeans STATIC
     src/csv.c
 )
 
-target_link_libraries(kmeans PUBLIC m)
+if(UNIX AND NOT APPLE)
+    target_link_libraries(kmeans PUBLIC m)
+endif()
 
 target_include_directories(kmeans PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
