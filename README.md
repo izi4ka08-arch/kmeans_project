@@ -16,12 +16,6 @@
 
 ![Визуализация кластеров](assets/clusters_example.png)
 
-### DBSCAN — отдельная визуализация
-
-![DBSCAN визуализация](assets/dbscan_only.png)
-
-*На рисунке показан результат работы алгоритма DBSCAN на данных с нелинейной структурой (полумесяцы). Алгоритм успешно разделил два кластера и выделил точки шума (серым цветом).*
-
 ## Что это делает
 
 ### K-means
@@ -189,8 +183,6 @@ int rc = kmeans_fit(X, n_samples, n_features, &params, labels_out, centroids_out
 - `demo/clustering_demo.c` — универсальное демо с выбором алгоритма (K-means или DBSCAN)
 - `tools/generate_blobs.py` — генерация `data.csv`
 - `tools/plot_results.py` — построение `clusters.png` и расчёт метрик
-- `tools/generate_dbscan_viz.py` — генерация сравнительной визуализации K-means и DBSCAN для README
-- `tools/generate_dbscan_only.py` — генерация отдельной визуализации только DBSCAN для README
 
 ## Сборка без CMake (MSVC)
 
