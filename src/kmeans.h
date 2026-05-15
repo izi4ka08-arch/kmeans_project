@@ -27,6 +27,25 @@ int kmeans_fit(
     double* inertia_out
 );
 
+typedef struct kmeans_elbow_result {
+    int k;
+    double inertia;
+} kmeans_elbow_result_t;
+
+int kmeans_elbow(
+    const double* X,
+    int n_samples,
+    int n_features,
+    int k_min,
+    int k_max,
+    int max_iters,
+    double tol,
+    unsigned int seed,
+    kmeans_init_method_t init_method,
+    kmeans_elbow_result_t* results_out,
+    int* n_results_out
+);
+
 #ifdef __cplusplus
 }
 #endif

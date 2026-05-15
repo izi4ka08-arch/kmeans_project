@@ -241,3 +241,60 @@ int kmeans_fit(
     return 0;
 }
 
+int kmeans_elbow(
+    const double* X,
+    int n_samples,
+    int n_features,
+    int k_min,
+    int k_max,
+    int max_iters,
+    double tol,
+    unsigned int seed,
+    kmeans_init_method_t init_method,
+    kmeans_elbow_result_t* results_out,
+    int* n_results_out
+) {
+    if (!X || !results_out || !n_results_out) return 1;
+    if (n_samples <= 0 || n_features <= 0) return 2;
+    if (k_min <= 0 || k_max < k_min) return 3;
+    if (max_iters <= 0) return 4;
+    if (!(tol >= 0.0)) return 5;
+
+    int n_k = k_max - k_min + 1;
+    *n_results_out = n_k;
+
+    double* centroids = (double*)malloc((size_t)k_max * (size_t)n_features * sizeof(double));
+    int* labels = (int*)malloc((size_t)n_samples * sizeof(int));
+    if (!centroids || !labels) {
+        free(centroids);
+        free(labels);
+        return 20;
+    }
+
+    for (int ki = 0; ki < n_k; ki++) {
+        int k = k_min + ki;
+
+        kmeans_params_t params;
+        params.k = k;
+        params.max_iters = max_iters;
+        params.tol = tol;
+        params.seed = seed + (unsigned int)ki;
+        params.init_method = init_method;
+
+        double inertia = 0.0;
+        int rc = kmeans_fit(X, n_samples, n_features, &params, labels, centroids, &inertia);
+        if (rc != 0) {
+            free(centroids);
+            free(labels);
+            return 100 + rc;
+        }
+
+        results_out[ki].k = k;
+        results_out[ki].inertia = inertia;
+    }
+
+    free(centroids);
+    free(labels);
+    return 0;
+}
+
