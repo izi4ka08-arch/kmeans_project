@@ -91,27 +91,6 @@ cmake -S . -B build
 cmake --build build
 ```
 
-Или собрать отдельные демо-программы:
-
-```bash
-# После сборки все артефакты находятся в папке build/
-# kmeans_demo, elbow_demo, clustering_demo доступны для запуска
-```
-
-### Сборка без CMake (Make)
-
-```bash
-make all
-```
-
-Или собрать отдельные демо-программы:
-
-```bash
-make kmeans_demo      # только K-means демо
-make elbow_demo       # метод локтя
-make clustering_demo  # универсальное демо с выбором алгоритма
-```
-
 3) Запустить демо:
 
 ### Универсальное демо с выбором алгоритма
@@ -148,22 +127,11 @@ python tools/plot_results.py --data data.csv --pred pred.csv
 Запуск демо-программы метода локтя:
 
 ```bash
-# Сборка
-make elbow_demo
-
 # Запуск (автоматически подберет k в диапазоне [2, 10])
-./elbow_demo --in data.csv --max-k 10
+./build/elbow_demo --in data.csv --max-k 10
 ```
 
 Программа выведет таблицу инерций для каждого `k` и порекомендует оптимальное значение.
-
-Важно: папка `build/` привязана к пути на диске и конкретной машине. Если переносите проект на другой ПК (или переместили папку проекта), просто удалите `build/` и пересоберите:
-
-```bash
-rm -rf build
-cmake -S . -B build
-cmake --build build
-```
 
 ## Пример использования как библиотеки (C API)
 
@@ -220,29 +188,3 @@ int rc = kmeans_fit(X, n_samples, n_features, &params, labels_out, centroids_out
 - `demo/clustering_demo.c` — универсальное демо с выбором алгоритма (K-means или DBSCAN)
 - `tools/generate_blobs.py` — генерация `data.csv`
 - `tools/plot_results.py` — построение `clusters.png` и расчёт метрик
-
-## Сборка без CMake (MSVC)
-
-Откройте **x64 Native Tools Command Prompt for VS** и выполните:
-
-```bat
-cl /O2 /I src demo\kmeans_demo.c src\kmeans.c src\csv.c /Fe:kmeans_demo.exe
-kmeans_demo.exe --in data.csv --k 3 --out pred.csv
-```
-
-## Сборка без CMake (Make)
-
-Альтернативный способ сборки через Makefile:
-
-```bash
-make all
-```
-
-Или собрать отдельные демо-программы:
-
-```bash
-make kmeans_demo      # только K-means демо
-make elbow_demo       # метод локтя
-make clustering_demo  # универсальное демо с выбором алгоритма
-```
-
