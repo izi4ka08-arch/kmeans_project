@@ -84,7 +84,21 @@ python tools/generate_blobs.py --out data.csv --type blobs --samples 600 --cente
 python tools/generate_blobs.py --out data.csv --type moons --samples 600 --seed 42
 ```
 
-2) Собрать (Make):
+2) Собрать (CMake):
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+
+Или собрать отдельные демо-программы:
+
+```bash
+# После сборки все артефакты находятся в папке build/
+# kmeans_demo, elbow_demo, clustering_demo доступны для запуска
+```
+
+### Сборка без CMake (Make)
 
 ```bash
 make all
@@ -115,12 +129,6 @@ make clustering_demo  # универсальное демо с выбором а
 
 ### Классическое K-means демо
 
-Windows (PowerShell), если собирали с `--config Release`:
-
-```powershell
-.\build\Release\kmeans_demo.exe --in data.csv --k 3 --out pred.csv --seed 42
-```
-
 Linux/macOS:
 
 ```bash
@@ -149,12 +157,12 @@ make elbow_demo
 
 Программа выведет таблицу инерций для каждого `k` и порекомендует оптимальное значение.
 
-Важно: папка `build/` привязана к пути на диске и конкретной машине. Если переносите проект на другой ПК (или переместили папку проекта), просто удалите `build/` и пересоздайте:
+Важно: папка `build/` привязана к пути на диске и конкретной машине. Если переносите проект на другой ПК (или переместили папку проекта), просто удалите `build/` и пересоберите:
 
-```powershell
-Remove-Item -Recurse -Force .\build
+```bash
+rm -rf build
 cmake -S . -B build
-cmake --build build --config Release
+cmake --build build
 ```
 
 ## Пример использования как библиотеки (C API)
@@ -220,5 +228,21 @@ int rc = kmeans_fit(X, n_samples, n_features, &params, labels_out, centroids_out
 ```bat
 cl /O2 /I src demo\kmeans_demo.c src\kmeans.c src\csv.c /Fe:kmeans_demo.exe
 kmeans_demo.exe --in data.csv --k 3 --out pred.csv
+```
+
+## Сборка без CMake (Make)
+
+Альтернативный способ сборки через Makefile:
+
+```bash
+make all
+```
+
+Или собрать отдельные демо-программы:
+
+```bash
+make kmeans_demo      # только K-means демо
+make elbow_demo       # метод локтя
+make clustering_demo  # универсальное демо с выбором алгоритма
 ```
 

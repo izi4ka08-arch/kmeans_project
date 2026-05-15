@@ -9,6 +9,8 @@ add_library(kmeans STATIC
     src/csv.c
 )
 
+target_link_libraries(kmeans PUBLIC m)
+
 target_include_directories(kmeans PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_executable(kmeans_demo
