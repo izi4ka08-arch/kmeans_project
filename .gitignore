@@ -1,15 +1,1 @@
-```
-# Compiled and build artifacts
-*.o
-*.obj
-*.out
-build/
-
-# Logs and temp files
-*.log
-*.tmp
-
-# Editors
-.vscode/
-.idea/
-```
+Nothing should be ignored in this case, as the added files are image files (.png) and the modified files are source code files (.c, .py) and a .gitignore file. No build artifacts, dependencies, or temporary files are present in the changes.

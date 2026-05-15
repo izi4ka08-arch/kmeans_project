@@ -1,14 +1,14 @@
 /**
  * @file clustering_demo.c
- * @brief Демо-приложение для кластеризации с выбором алгоритма (K-means или DBSCAN).
+ * @brief Demo application for clustering with algorithm selection (K-means or DBSCAN).
  * 
- * Приложение позволяет выбрать алгоритм кластеризации через командную строку:
- * - kmeans: классический алгоритм K-means
- * - dbscan: алгоритм кластеризации на основе плотности DBSCAN
+ * Application allows selecting clustering algorithm via command line:
+ * - kmeans: classic K-means algorithm
+ * - dbscan: density-based clustering algorithm DBSCAN
  * 
- * Примеры использования:
- *   ./clustering_demo data.csv 3 kmeans           # K-means с 3 кластерами
- *   ./clustering_demo data.csv 0.5 4 dbscan       # DBSCAN с eps=0.5, min_pts=4
+ * Usage examples:
+ *   ./clustering_demo data.csv 3 kmeans           # K-means with 3 clusters
+ *   ./clustering_demo data.csv 0.5 4 dbscan       # DBSCAN with eps=0.5, min_pts=4
  */
 
 #include <stdio.h>
@@ -19,66 +19,66 @@
 #include "../src/dbscan.h"
 
 /**
- * @brief Структура конфигурации для разных алгоритмов.
+ * @brief Configuration structure for different algorithms.
  */
 typedef struct {
-    char algorithm[32];     /**< Название алгоритма: "kmeans" или "dbscan" */
+    char algorithm[32];     /**< Algorithm name: "kmeans" or "dbscan" */
     
-    // Параметры для K-means
-    int k;                  /**< Количество кластеров для K-means */
-    int max_iter;           /**< Максимальное количество итераций */
-    int init_method;        /**< Метод инициализации центроидов */
+    // Parameters for K-means
+    int k;                  /**< Number of clusters for K-means */
+    int max_iter;           /**< Maximum number of iterations */
+    int init_method;        /**< Centroid initialization method */
     
-    // Параметры для DBSCAN
-    double eps;             /**< Радиус окрестности для DBSCAN */
-    int min_pts;            /**< Минимальное количество точек для DBSCAN */
+    // Parameters for DBSCAN
+    double eps;             /**< Neighborhood radius for DBSCAN */
+    int min_pts;            /**< Minimum number of points for DBSCAN */
 } ClusteringConfig;
 
 /**
- * @brief Выводит справку по использованию программы.
+ * @brief Prints usage information.
  * 
- * @param program_name Имя программы (argv[0]).
+ * @param program_name Program name (argv[0]).
  */
 void print_usage(const char *program_name) {
-    printf("Использование:\n");
+    printf("Usage:\n");
     printf("  %s <input.csv> <params...> <algorithm>\n\n", program_name);
     
-    printf("Алгоритмы:\n");
-    printf("  kmeans  - Кластеризация K-means\n");
-    printf("  dbscan  - Кластеризация DBSCAN\n\n");
+    printf("Algorithms:\n");
+    printf("  kmeans  - K-means clustering\n");
+    printf("  dbscan  - DBSCAN clustering\n\n");
     
-    printf("Параметры для K-means:\n");
+    printf("Parameters for K-means:\n");
     printf("  %s <input.csv> <k> [max_iter] [init_method] kmeans\n", program_name);
-    printf("    k          - количество кластеров (целое число > 0)\n");
-    printf("    max_iter   - макс. итераций (по умолчанию 100)\n");
-    printf("    init_method- метод инициализации: 0=random, 1=kmeans++ (по умолчанию 1)\n\n");
+    printf("    k          - number of clusters (integer > 0)\n");
+    printf("    max_iter   - maximum iterations (default: 100)\n");
+    printf("    init_method- initialization method: 0=random, 1=kmeans++ (default: 1)\n\n");
     
-    printf("Параметры для DBSCAN:\n");
+    printf("Parameters for DBSCAN:\n");
     printf("  %s <input.csv> <eps> <min_pts> dbscan\n", program_name);
-    printf("    eps        - радиус окрестности (вещественное число > 0)\n");
-    printf("    min_pts    - мин. количество точек (целое число > 0)\n\n");
+    printf("    eps        - neighborhood radius (float > 0)\n");
+    printf("    min_pts    - minimum number of points (integer > 0)\n\n");
     
-    printf("Примеры:\n");
+    printf("Examples:\n");
     printf("  %s data.csv 3 kmeans\n", program_name);
     printf("  %s data.csv 3 200 0 kmeans\n", program_name);
     printf("  %s data.csv 0.5 4 dbscan\n", program_name);
 }
 
 /**
- * @brief Выполняет кластеризацию K-means.
+ * @brief Performs K-means clustering.
  * 
- * @param dataset Датасет для кластеризации.
- * @param config Конфигурация с параметрами K-means.
- * @return Указатель на массив меток кластеров.
+ * @param dataset Dataset for clustering.
+ * @param config Configuration with K-means parameters.
+ * @return Pointer to array of cluster labels.
  */
 int* run_kmeans(Dataset *dataset, ClusteringConfig *config) {
-    printf("\n=== Запуск K-means ===\n");
-    printf("Количество кластеров (k): %d\n", config->k);
-    printf("Максимум итераций: %d\n", config->max_iter);
-    printf("Метод инициализации: %s\n", 
+    printf("\n=== K-means Task ===\n");
+    printf("Number of clusters (k): %d\n", config->k);
+    printf("Maximum iterations: %d\n", config->max_iter);
+    printf("Initialization method: %s\n", 
            config->init_method == 0 ? "random" : "kmeans++");
     
-    // Подготовка параметров
+    // Prepare parameters
     kmeans_params_t params = {0};
     params.k = config->k;
     params.max_iters = config->max_iter;
@@ -87,22 +87,22 @@ int* run_kmeans(Dataset *dataset, ClusteringConfig *config) {
     params.init_method = (config->init_method == 0) ? 
                          KMEANS_INIT_RANDOM : KMEANS_INIT_KMEANS_PLUS_PLUS;
     
-    // Выделение памяти для центроидов и меток
+    // Allocate memory for centroids and labels
     double *centroids = (double *)malloc(config->k * dataset->num_cols * sizeof(double));
     int *labels = (int *)malloc(dataset->num_rows * sizeof(int));
     double inertia = 0.0;
     
     if (!centroids || !labels) {
-        fprintf(stderr, "Ошибка выделения памяти\n");
+        fprintf(stderr, "Memory allocation error\n");
         free(centroids);
         free(labels);
         return NULL;
     }
     
-    // Преобразование данных в плоский массив для kmeans_fit
+    // Convert data to flat array for kmeans_fit
     double *X_flat = (double *)malloc(dataset->num_rows * dataset->num_cols * sizeof(double));
     if (!X_flat) {
-        fprintf(stderr, "Ошибка выделения памяти для данных\n");
+        fprintf(stderr, "Memory allocation error for data\n");
         free(centroids);
         free(labels);
         return NULL;
@@ -114,7 +114,7 @@ int* run_kmeans(Dataset *dataset, ClusteringConfig *config) {
         }
     }
     
-    // Запуск K-means
+    // Run K-means
     int rc = kmeans_fit(X_flat, dataset->num_rows, dataset->num_cols, 
                         &params, labels, centroids, &inertia);
     
@@ -122,23 +122,23 @@ int* run_kmeans(Dataset *dataset, ClusteringConfig *config) {
     free(centroids);
     
     if (rc != 0) {
-        fprintf(stderr, "Ошибка выполнения K-means: %d\n", rc);
+        fprintf(stderr, "K-means execution error: %d\n", rc);
         free(labels);
         return NULL;
     }
     
-    printf("Финальное значение инерции: %.6f\n", inertia);
-    printf("Найдено кластеров: %d\n", config->k);
+    printf("Final inertia value: %.6f\n", inertia);
+    printf("Number of clusters found: %d\n", config->k);
     
     return labels;
 }
 
 /**
- * @brief Выполняет кластеризацию DBSCAN.
+ * @brief Performs DBSCAN clustering.
  * 
- * @param dataset Датасет для кластеризации.
- * @param config Конфигурация с параметрами DBSCAN.
- * @return Указатель на массив меток кластеров.
+ * @param dataset Dataset for clustering.
+ * @param config Configuration with DBSCAN parameters.
+ * @return Pointer to array of cluster labels.
  */
 int* run_dbscan(Dataset *dataset, ClusteringConfig *config) {
     printf("\n=== DBSCAN Task ===\n");
@@ -210,10 +210,10 @@ int main(int argc, char *argv[]) {
     strncpy(config.algorithm, algorithm, sizeof(config.algorithm) - 1);
     
     if (strcmp(algorithm, "kmeans") == 0) {
-        // Парсинг параметров для K-means
+        // Parse parameters for K-means
         config.k = atoi(argv[2]);
         if (config.k <= 0) {
-            fprintf(stderr, "Ошибка: k должно быть положительным числом\n");
+            fprintf(stderr, "Error: k must be a positive integer\n");
             return 1;
         }
         
@@ -225,9 +225,9 @@ int main(int argc, char *argv[]) {
         }
         
     } else if (strcmp(algorithm, "dbscan") == 0) {
-        // Парсинг параметров для DBSCAN
+        // Parse parameters for DBSCAN
         if (argc != 5) {
-            fprintf(stderr, "Ошибка: DBSCAN требует ровно 2 параметра (eps и min_pts)\n");
+            fprintf(stderr, "Error: DBSCAN requires exactly 2 parameters (eps and min_pts)\n");
             print_usage(argv[0]);
             return 1;
         }
@@ -236,38 +236,38 @@ int main(int argc, char *argv[]) {
         config.min_pts = atoi(argv[3]);
         
         if (config.eps <= 0) {
-            fprintf(stderr, "Ошибка: eps должно быть положительным числом\n");
+            fprintf(stderr, "Error: eps must be a positive number\n");
             return 1;
         }
         if (config.min_pts <= 0) {
-            fprintf(stderr, "Ошибка: min_pts должно быть положительным числом\n");
+            fprintf(stderr, "Error: min_pts must be a positive integer\n");
             return 1;
         }
         
     } else {
-        fprintf(stderr, "Ошибка: неизвестный алгоритм '%s'\n", algorithm);
+        fprintf(stderr, "Error: unknown algorithm '%s'\n", algorithm);
         print_usage(argv[0]);
         return 1;
     }
     
-    // Чтение датасета из CSV
-    printf("Чтение датасета из файла: %s\n", input_file);
+    // Read dataset from CSV
+    printf("Reading dataset from file: %s\n", input_file);
     csv_dataset_t ds = {0};
     
-    // Определяем количество признаков (предполагаем, что все колонки - признаки)
-    int n_features = 2;  // По умолчанию для демонстрации
+    // Determine number of features (assume all columns are features)
+    int n_features = 2;  // Default for demonstration
     if (csv_read_dataset(input_file, n_features, -1, &ds) != 0) {
-        fprintf(stderr, "Ошибка чтения файла: %s\n", input_file);
+        fprintf(stderr, "Error reading file: %s\n", input_file);
         return 1;
     }
     
-    printf("Загружено %d образцов с %d признаками\n", ds.n_samples, ds.n_features);
+    printf("Loaded %d samples with %d features\n", ds.n_samples, ds.n_features);
     
-    // Преобразуем csv_dataset_t в Dataset для библиотеки
+    // Convert csv_dataset_t to Dataset for the library
     Dataset dataset = {0};
     dataset.data = (double **)malloc(ds.n_samples * sizeof(double *));
     if (!dataset.data) {
-        fprintf(stderr, "Ошибка выделения памяти\n");
+        fprintf(stderr, "Error allocating memory\n");
         csv_free_dataset(&ds);
         return 1;
     }
@@ -279,7 +279,7 @@ int main(int argc, char *argv[]) {
         dataset.data[i] = ds.X + i * ds.n_features;
     }
     
-    // Запуск выбранного алгоритма
+    // Run selected algorithm
     int *labels = NULL;
     
     if (strcmp(algorithm, "kmeans") == 0) {
@@ -289,16 +289,16 @@ int main(int argc, char *argv[]) {
     }
     
     if (!labels) {
-        fprintf(stderr, "Ошибка выполнения кластеризации\n");
+        fprintf(stderr, "Clustering execution error\n");
         free(dataset.data);
         csv_free_dataset(&ds);
         return 1;
     }
     
-    // Сохранение результатов
+    // Save results
     save_results(input_file, &ds, labels, ds.n_samples);
     
-    // Очистка памяти
+    // Free memory
     free(labels);
     free(dataset.data);
     csv_free_dataset(&ds);
