@@ -141,9 +141,9 @@ int* run_kmeans(Dataset *dataset, ClusteringConfig *config) {
  * @return Указатель на массив меток кластеров.
  */
 int* run_dbscan(Dataset *dataset, ClusteringConfig *config) {
-    printf("\n=== Запуск DBSCAN ===\n");
-    printf("Радиус eps: %.4f\n", config->eps);
-    printf("Минимальное количество точек (min_pts): %d\n", config->min_pts);
+    printf("\n=== DBSCAN Task ===\n");
+    printf("Radius eps: %.4f\n", config->eps);
+    printf("Minimum points (min_pts): %d\n", config->min_pts);
     
     DbscanResult result = dbscan_cluster(
         dataset,
@@ -151,7 +151,7 @@ int* run_dbscan(Dataset *dataset, ClusteringConfig *config) {
         config->min_pts
     );
     
-    printf("Найдено кластеров: %d\n", result.num_clusters);
+    printf("Clusters found: %d\n", result.num_clusters);
     
     // Подсчитываем количество точек шума
     int noise_count = 0;
@@ -160,7 +160,7 @@ int* run_dbscan(Dataset *dataset, ClusteringConfig *config) {
             noise_count++;
         }
     }
-    printf("Точек помечено как шум: %d (%.2f%%)\n", 
+    printf("Points marked as noise: %d (%.2f%%)\n", 
            noise_count, 
            100.0 * noise_count / result.num_points);
     
@@ -303,6 +303,6 @@ int main(int argc, char *argv[]) {
     free(dataset.data);
     csv_free_dataset(&ds);
     
-    printf("\nКластеризация завершена успешно!\n");
+    printf("\nClustering completed successfully!\n");
     return 0;
 }

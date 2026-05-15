@@ -52,6 +52,7 @@ int main(int argc, char** argv) {
         if (str_eq(a, "--in") && i + 1 < argc) in_path = argv[++i];
         else if (str_eq(a, "--k-min") && i + 1 < argc) k_min = atoi(argv[++i]);
         else if (str_eq(a, "--k-max") && i + 1 < argc) k_max = atoi(argv[++i]);
+        else if (str_eq(a, "--max-k") && i + 1 < argc) k_max = atoi(argv[++i]); /* алиас для --k-max */
         else if (str_eq(a, "--features") && i + 1 < argc) n_features = atoi(argv[++i]);
         else if (str_eq(a, "--max-iters") && i + 1 < argc) max_iters = atoi(argv[++i]);
         else if (str_eq(a, "--tol") && i + 1 < argc) tol = atof(argv[++i]);
